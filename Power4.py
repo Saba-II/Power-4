@@ -30,12 +30,52 @@ def affiche(gril) :
                 print("|0",end="")
         print("|")
 
+def match_nul(gril):
+    result = 0
+    for i in range(6):
+        if gril[0][i] == 0 :
+            result += 1
+    if result != 0 :
+        return "False"
+    elif result == 0 :
+        return "True"
+
 def coup_possible(gril, col):
     for i in gril :
         if i[col] == 0 :
             return "True"
         else :
             return "False"
+
+def diag_bas(gril, j, lig, col):
+    result = 0
+    for i in range(3):
+        if gril[lig+i][col-i] == j:
+            result += 1
+    if result >= 4:
+        return "True"
+    else:
+        return "False"
+
+def diag_haut(gril, j, lig, col):
+    result=0
+    for i in range(3):
+        if gril[lig+i][col+i]==j:
+            result+=1
+    if result>=4:
+        return "True"
+    else:
+        return "False"
+
+def victoire(gril, j, lig, col):
+    if lig < 2 and col < 6 :
+        if diag_bas(gril, j, lig, col) == "True" or diag_haut(gril, j, lig, col) == "True" or vert(gril, j, lig, col) == "True":
+            return "True"
+    elif lig < 5 and col < 3:
+        if horiz(gril, j, lig, col) == "True":
+            return "True"
+    else:
+        return "False"
 
 def jouer(gril, j, col):
     lig = 0
@@ -51,46 +91,6 @@ def jouer(gril, j, col):
     elif match_nul(gril) == "True":
         return "Match nul.", affiche(gril)
 
-def victoire(gril, j, lig, col):
-    if lig < 2 and col < 6 :
-        if diag_bas(gril, j, lig, col) == "True" or diag_haut(gril, j, lig, col) == "True" or vert(gril, j, lig, col) == "True":
-            return "True"
-    elif lig < 5 and col < 3:
-        if horiz(gril, j, lig, col) == "True":
-            return "True"
-    else:
-        return "False"
-
-def match_nul(gril):
-    result = 0
-    for i in range(6):
-        if gril[0][i] == 0 :
-            result += 1
-    if result != 0 :
-        return "False"
-    elif result == 0 :
-        return "True"
-
-def j1(gril, j, col):
-    y = grille_vide()
-    t = jouer(y, 1, 2)
-    return t
-
-def j2(gril, j, col):
-    y = grille_vide()
-    t = jouer(y, 2, 2)
-    return t
-
-def diag_bas(gril, j, lig, col):
-    result = 0
-    for i in range(3):
-        if gril[lig+i][col-i] == j:
-            result += 1
-    if result >= 4:
-        return "True"
-    else:
-        return "False"
-
 def vert(gril, j, lig, col):
     result = 0
     for i in range(3):
@@ -101,25 +101,33 @@ def vert(gril, j, lig, col):
     else:
         return "False"
 
-def vert(gril, j, lig, col):
-    result = 0
+def horiz(gril, j, lig, col):
+    result=0
     for i in range(3):
-        if gril[lig+i][col] == j :
-            result += 1
-    if result >= 4 :
+        if gril[lig][col+i]==j:
+            result+=1
+    if result>=4:
         return "True"
     else:
         return "False"
+horiz(grille_vide(), 1, 3, 0)
+
+def ui(gril):
+    n_col = "|0|1|2|3|4|5|6|"
+    print(n_col)
+    print("...............")
+    affiche(gril)
+    print("---------------")
 
 def power4():
     graphics()
-    affiche(grille_vide())
+    ui(grille_vide())
     run = True
+    y = grille_vide()
     while run == True :
-        y = grille_vide()
         c1 = int(input("Joueur 1 > "))
         c2 = int(input("Joueur 2 > "))
-        x = jouer(y, 1, c1)	# Cette partie ne garde pas en mémoire les coups précédents
+        x = jouer(y, 1, c1)
         y = jouer(x, 2, c2)
-        affiche(y)
+        ui(x)
 power4()
